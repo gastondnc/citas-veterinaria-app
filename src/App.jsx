@@ -8,30 +8,32 @@ const App = () => {
   const [ pacientes, setPacientes ] = useState([]);
   const [ paciente, setPaciente ] = useState({});
 
+
+  const getDBData = (key) => {
+    return JSON.parse(localStorage.getItem( key ))
+  }
+
+  const setDBData = (key, data) => {
+    localStorage.setItem(key, JSON.stringify( data ));
+  }
+
+
   // Local Sotrage//
-  useEffect( () => {
-
-    const obtenerLS = () => {
-      const pacientesLS = JSON.parse(localStorage.getItem('pacientes')) ?? [];
-
-      setPacientes(pacientesLS);
-    }
-
-    obtenerLS();
-
+  useEffect( () => {   
+    const lsData = getDBData('pacientes');
+    !pacientes.length && lsData && setPacientes( lsData ) 
   }, [] );
-  
 
-  useEffect ( () => {
 
-    localStorage.setItem('pacientes', JSON.stringify( pacientes ));
-    
+  useEffect ( () => {    
+    setDBData('pacientes', pacientes);
   }, [pacientes] );
   // End Local Storage //
 
 
   // Eliminado paciente //
   const eliminarPaciente = id => {
+
     const pacientesActualizados = pacientes.filter( paciente => paciente.id !== id );
     setPacientes( pacientesActualizados );
   }
